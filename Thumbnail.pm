@@ -2,7 +2,7 @@ package Image::Magick::Thumbnail;
 
 use strict;
 use warnings;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 NAME
 
@@ -21,14 +21,21 @@ Image::Magick::Thumbnail - produces thumbnail images with ImageMagick
 	# Save your thumbnail
 	$thumb->Write('source_thumb.jpg');
 
+	# Create another thumb, that fits into the geometry
+	my ($thumb,$x,$y) = Image::Magick::Thumbnail::create($src,'60x50');
+
+
 	__END__
 
 =head1 DESCRIPTION
 
 This module uses the ImageMagick library to create a thumbnail image with no side bigger than you specify.
 
+There is no OO API, since that would seem to be over-kill.
 The subroutine C<create> takes two arguments: the first is an ImageMagick image object,
-the second is the size, in pixels, you wish the image's longest side to be.
+the second is either the size in pixels you wish the longest side of the image to be,
+or an C<Image::Magick>-style 'geometry' (eg C<100x120>) which the thumbnail must fit.
+
 It returns an ImaegMagick image object (the thumbnail), as well as the
 number of pixels of the I<width> and I<height> of the image,
 as integer scalars.
@@ -43,12 +50,28 @@ as integer scalars.
 
 use Image::Magick;
 
-sub create { my ($img,$n) = (shift,shift);
+sub create { my ($img, $max) = (shift, shift);
+	if (not $img){
+		warn "No image in ".__PACKAGE__."::create";
+		return undef;
+	}
+	if (not $max){
+		warn "No size or geometry in ".__PACKAGE__."::create";
+		return undef;
+	}
+	my ($maxx, $maxy);
 	my ($ox,$oy) = $img->Get('width','height');
-	my $r = $ox>$oy ? $ox / $n : $oy / $n;
+	if (($maxx, $maxy) = $max =~ /^(\d+)x(\d+)$/i){
+		$max = $ox>$oy? $maxx : $maxy;
+	}
+	my $r = $ox>$oy ? $ox / $max : $oy / $max;
+	die __PACKAGE__."::create error: the thumbnail won't fit into the desired shape. Please let the author know, cpan -at- leegoddard.net" if $maxx and $maxy and (
+		$ox/$r > $maxx or $oy/$r > $maxy
+	);
 	$img->Resize(width=>$ox/$r,height=>$oy/$r);
 	return $img, sprintf("%.0f",$ox/$r), sprintf("%.0f",$oy/$r);
 }
+
 
 1;
 
