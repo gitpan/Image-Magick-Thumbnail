@@ -1,0 +1,58 @@
+Image/Magick/Thumbnail version 0.01
+===================================
+
+NAME
+    Image::Magick::Thumbnail - produces thumbnail images with ImageMagick
+
+SYNOPSIS
+            use Image::Magick::Thumbnail;
+            # Load your source image
+            my $src = new Image::Magick;
+            $src->Read('source.jpg');
+
+            # Create the thumbnail from it, where the biggest side is 50 px
+            my ($thumb,$x,$y) = Image::Magick::Thumbnail::create($src,50);
+
+            # Save your thumbnail
+            $thumb->Write('source_thumb.jpg');
+
+            __END__
+
+DESCRIPTION
+    This module uses the ImageMagick library to create a thumbnail image
+    with no side bigger than you specify.
+
+    The subroutine "create" takes two arguments: the first is an ImageMagick
+    image object, the second is the size, in pixels, you wish the image's
+    longest side to be. It returns an ImaegMagick image object (the
+    thumbnail), as well as the number of pixels of the *width* and *height*
+    of the image, as integer scalars.
+
+PREREQUISITES
+    Image::Magick
+
+EXPORT
+
+    None.
+
+INSTALLATION
+	perl Makefile.PL
+	make
+	make test
+	make install
+	make clean
+	cpantest -g PASS
+
+AUTHOR
+    Lee Goddard <LGoddard@CPAN.org>
+
+SEE ALSO
+    the perl manpage, the Image::Magick manpage, the Image::GD::Thumbnail
+    manpage.
+
+COPYRIGT
+    Copyright (C) Lee Godadrd 2001 all rights reserved. Available under the
+    same terms as Perl itself.
+
+
+Tool completed successfully

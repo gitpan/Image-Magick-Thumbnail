@@ -1,0 +1,6 @@
+Revision history for Perl extension Image::Magick::Thumbnail.
+
+0.01  Thu Jun  6 17:17:42 2002
+	- original version; created by h2xs 1.21 with options
+		-X -n Image::Magick::Thumbnail
+
