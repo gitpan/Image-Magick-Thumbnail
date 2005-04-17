@@ -2,11 +2,11 @@ package Image::Magick::Thumbnail;
 
 use strict;
 use warnings;
-our $VERSION = '0.02';
+our $VERSION = '0.04';
 
 =head1 NAME
 
-Image::Magick::Thumbnail - produces thumbnail images with ImageMagick
+Image::Magick::Thumbnail - Produces thumbnail images with ImageMagick
 
 =head1 SYNOPSIS
 
@@ -49,6 +49,7 @@ as integer scalars.
 =cut
 
 use Image::Magick;
+use Carp;
 
 sub create { my ($img, $max) = (shift, shift);
 	if (not $img){
@@ -59,16 +60,19 @@ sub create { my ($img, $max) = (shift, shift);
 		warn "No size or geometry in ".__PACKAGE__."::create";
 		return undef;
 	}
-	my ($maxx, $maxy);
 	my ($ox,$oy) = $img->Get('width','height');
+
+	# From geo, get the longest side of the box into which to fit:
+	my ($maxx, $maxy);
 	if (($maxx, $maxy) = $max =~ /^(\d+)x(\d+)$/i){
-		$max = $ox>$oy? $maxx : $maxy;
+		$max = ($ox>$oy)? $maxx : $maxy;
+	} else {
+		$maxx = $maxy = $max;
 	}
-	my $r = $ox>$oy ? $ox / $max : $oy / $max;
-	die __PACKAGE__."::create error: the thumbnail won't fit into the desired shape. Please let the author know, cpan -at- leegoddard.net" if $maxx and $maxy and (
-		$ox/$r > $maxx or $oy/$r > $maxy
-	);
-	$img->Resize(width=>$ox/$r,height=>$oy/$r);
+
+	my $r = ($ox>$oy) ? ($ox/$maxx) : ($oy/$maxy);
+
+	$img->Thumbnail(width=>int($ox/$r),height=>int($oy/$r));
 	return $img, sprintf("%.0f",$ox/$r), sprintf("%.0f",$oy/$r);
 }
 

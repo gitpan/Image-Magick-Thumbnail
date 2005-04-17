@@ -1,11 +1,8 @@
-Image/Magick/Thumbnail version 0.02
+Image/Magick/Thumbnail version 0.03
 ===================================
 
 Produces thumbnail images with ImageMagick.
 
-This version catches a couple of operator errors, as well as offering
-an attempt at accepting IM geometry. I've not really had a chance to
-test this, and am not sure it what the requestor wanted, but ... well,
-let me know.
+This version catches an unusual floating-point situation spotted by André Warrier.
 
 Lee -at- leegoddard -dot- net
