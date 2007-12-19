@@ -1,6 +1,6 @@
 use Test;
 BEGIN { plan tests => 11 };
-use Image::Magick::Thumbnail 0.04;
+use Image::Magick::Thumbnail 0.05;
 ok(1);
 skip (!-e 'source.jpg', &img_tests);
 exit;

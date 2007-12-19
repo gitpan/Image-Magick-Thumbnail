@@ -2,7 +2,7 @@ package Image::Magick::Thumbnail;
 
 use strict;
 use warnings;
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 NAME
 
@@ -70,7 +70,8 @@ sub create { my ($img, $max) = (shift, shift);
 		$maxx = $maxy = $max;
 	}
 
-	my $r = ($ox>$oy) ? ($ox/$maxx) : ($oy/$maxy);
+	# my $r = ($ox>$oy) ? ($ox/$maxx) : ($oy/$maxy);
+	my $r = ($ox/$maxx) > ($oy/$maxy) ? ($ox/$maxx) : ($oy/$maxy);
 
 	$img->Thumbnail(width=>int($ox/$r),height=>int($oy/$r));
 	return $img, sprintf("%.0f",$ox/$r), sprintf("%.0f",$oy/$r);
