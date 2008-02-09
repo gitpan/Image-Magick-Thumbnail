@@ -4,6 +4,8 @@ use strict;
 use warnings;
 our $VERSION = '0.06';
 
+use Carp;
+
 =head1 NAME
 
 Image::Magick::Thumbnail - Produces thumbnail images with ImageMagick
@@ -35,42 +37,41 @@ This module uses the ImageMagick library to create a thumbnail image with no sid
 
 There is no OO API, since that would seem to be over-kill. There's just C<create>.
 
-=head1 create
+=head2 SUBROUTINE create
 
 	my ($im_obj, $x, $y) = Image::Magick::Thumbnail->create( $src, $maxsize_or_geometry);
 
-The C<create> routine may be accessed as a subroutine or class method.
 It takes two arguments: the first is an ImageMagick image object,
 the second is either the size in pixels you wish the longest side of the image to be,
 or an C<Image::Magick>-style 'geometry' (eg C<100x120>) which the thumbnail must fit.
 Missing part of the geometry is fine.
 
-returns an C<Imaeg::Magick> image object (the thumbnail), as well as the
+Returns an C<Imaeg::Magick> image object (the thumbnail), as well as the
 number of pixels of the I<width> and I<height> of the image, as integer scalars,
 and (mainly for testing) the ration used in the scaling.
 
-=head1 PREREQUISITES
-
-	Image::Magick
-
-=head1 WARNINGS
+=head2 WARNINGS
 
 Will warn on bad or missing arguments if you have C<use>d C<warnings>.
+
+=head2 PREREQUISITES
+
+	Image::Magick
 
 =head2 EXPORTS
 
 None by default.
-
-=head1 AUTHOR
-
-Lee Goddard <LGoddard@CPAN.org>
 
 =head1 SEE ALSO
 
 L<perl>, L<Image::Magick>, L<Image::GD::Thumbnail>,
 and L<Image::Thumbnail> for the same formula for various engines.
 
-=head1 COPYRIGT
+=head1 AUTHOR
+
+Lee Goddard <LGoddard@CPAN.org>
+
+=head2 COPYRIGT
 
 Copyright (C) Lee Godadrd 2001-2008. all rights reserved.
 Available under the same terms as Perl itself.
@@ -79,28 +80,39 @@ Available under the same terms as Perl itself.
 
 use Image::Magick;
 use Carp;
-use warnings::register;
+#use warnings::register;
 
-sub create {
-	shift if $_[0] eq __PACKAGE__; # Allow "class access"
-
+sub create($$;$) {
 	my ($img, $max) = (shift, shift);
 
 	if (not $img){
         if (warnings::enabled()) {
-			warn "No image in ".__PACKAGE__."::create";
+			Carp::cluck "No image";
+		}
+		return undef;
+	}
+
+	if (not ref $img or ref $img ne 'Image::Magick'){
+        if (warnings::enabled()) {
+			Carp::cluck "Not an Image::Magick object";
 		}
 		return undef;
 	}
 
 	if (not $max){
         if (warnings::enabled()) {
-			warn "No size or geometry in ".__PACKAGE__."::create";
+			Carp::cluck "No size or geometry";
 		}
 		return undef;
 	}
 
 	my ($ox, $oy) = $img->Get('width', 'height');
+	if (not $ox and not $oy){
+        if (warnings::enabled()) {
+			Carp::cluck "Could not get image size";
+		}
+		return undef;
+	}
 
 	# Version 0.05 behaviour
 	# From geo, get the longest side of the box into which to fit:
@@ -123,7 +135,7 @@ sub create {
 		}
 		elsif (not $1 or not $3){
 			if (not $2){
-				# warn "Got one";
+				# warn "Got one ($max)";
 				$r = ($ox/$max) > ($oy/$max) ? ($ox/$max) : ($oy/$max);
 			} else {
 				# warn "Got one or other";
@@ -135,7 +147,7 @@ sub create {
 
 	else {
         if (warnings::enabled()) {
-			warn __PACKAGE__."::create expected a second argument of a single number, a geometry, or a one-side geometry: please see the POD.";
+			warn __PACKAGE__."::create expected a second argument of a single positive integer, a valid geometry, or a one-side geometry: please see the POD.";
 		}
 		return undef;
 	}

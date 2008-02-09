@@ -1,8 +1,6 @@
-Image/Magick/Thumbnail version 0.03
+Image/Magick/Thumbnail version 0.06
 ===================================
 
 Produces thumbnail images with ImageMagick.
-
-This version catches an unusual floating-point situation spotted by André Warrier.
 
 Lee -at- leegoddard -dot- net

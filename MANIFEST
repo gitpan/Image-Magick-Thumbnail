@@ -11,3 +11,4 @@ t/pod_coverage.t
 t/source.jpg
 t/source100x200.jpg
 t/test.t
+MANIFEST.skip

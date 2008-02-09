@@ -20,7 +20,7 @@ is( 0, scalar(@_), 'No tests missing from manifest') or diag join", ",@_;
 @_ = grep {/\.pm$/} @$missing;
 is( 0, scalar(@_), 'No PMs missing from manifest') or diag join", ",@_;
 
-is( 0, scalar(@$extra), 'No un-MANIFESTed files found') or diag join", ",@$extra;
+is( 0, scalar(@$extra), 'No un-MANIFESTed files found') or diag join"\n",@$extra;
 
 =head1 TEST F<001_MANIFEST.t>
 
