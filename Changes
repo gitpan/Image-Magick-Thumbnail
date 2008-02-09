@@ -1,5 +1,8 @@
 Revision history for Perl extension Image::Magick::Thumbnail.
 
+0.05  08 February 2008
+	  Allow forcing which side to which scale, for Arthur.
+
 0.05  Wed Dec 19 11:56:00 2007
 
 0.03  Sun Apr 17 12:13:14 2005
