@@ -4,10 +4,7 @@ use warnings;
 use Test::More;
 
 my
-	$VERSION = do { my @r = ( q$Revision: 1.2 $ =~ /\d+/g ); sprintf "%d." . "%03d" x $#r, @r };
-
-use Cwd;
-chdir ".." if getcwd() =~ '\Wt';	# For dev
+	$VERSION = do { my @r = ( q$Revision: 1.3 $ =~ /\d+/g ); sprintf "%d." . "%03d" x $#r, @r };
 
 eval "use Test::Pod 1.00";
 

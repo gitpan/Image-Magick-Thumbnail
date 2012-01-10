@@ -5,11 +5,9 @@ my $VERSION = 1;
 use lib qw(../lib . t/);
 use ExtUtils::testlib;
 use ExtUtils::Manifest;
-use Cwd;
 use Data::Dumper;
 use Test::More tests => 3;
 
-chdir ".." if getcwd =~ /\Wt$/;
 # mkmanifest();
 
 my ($missing, $extra) = ExtUtils::Manifest::fullcheck();
