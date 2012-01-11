@@ -5,11 +5,11 @@ use Test::More;
 use lib qw[ lib ../lib ];
 
 BEGIN {
-	plan tests => 22;
+	plan tests => 21;
 }
 
 SKIP: {
-	skip "Can't find images", 22
+	skip "Can't find images", 21
 		if !-e "t/source.jpg" || !-e "t/source100x200.jpg";
 
 	eval {
@@ -19,30 +19,25 @@ SKIP: {
 	
 	diag $@ if $@;
 
-	skip "This module requires Image::Magick", 22
+	skip "This module requires Image::Magick", 21
 		if $@;
 	
 	&img_tests;
 };
-
-sub BAIL_OUT {
-	warn  join "\n", @_;
-	exit(-1);
-}
 
 sub img_tests {
 	my $src = Image::Magick->new;
 	isa_ok($src, 'Image::Magick');
 
 	my $err = $src->Read('t/source.jpg');
-	BAIL_OUT "Didn't get vry far: ".$err if $err;
+	BAIL_OUT("Didn't get vry far: ".$err) if $err;
 
 	unlink 't/source_thumb.jpg' if -e 't/source_thumb.jpg';
 
 	{
 		my ( $thumb, $x, $y, $r);
 		($thumb,$x,$y) = Image::Magick::Thumbnail::create($src,50);
-		ok($thumb, 'Got thumb') or BAIL_OUT;
+		ok($thumb, 'Got thumb') or BAIL_OUT();
 		ok ( $x<=50 );
 		ok ( $y<=50 );
 		$thumb->Write('t/source_thumb.jpg');
@@ -101,10 +96,10 @@ sub img_tests {
 	}
 
 	ERRS: {
+		no warnings;
 		my ( $thumb, $x, $y, $r);
 		$src = Image::Magick->new;
 		$src->Read('t/source100x200.jpg');
-		no warnings;
 		eval {
 			($thumb,$x,$y) = Image::Magick::Thumbnail::create($src,'-1x');
 		};
